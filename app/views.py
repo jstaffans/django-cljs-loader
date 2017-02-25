@@ -8,5 +8,5 @@ class TestPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TestPageView, self).get_context_data(**kwargs)
-        context['project_settings'] = loader.get_bundle()
+        context['bundles'] = loader.get_bundles()
         return context
