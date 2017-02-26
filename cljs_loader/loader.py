@@ -16,6 +16,7 @@ def _strip_meta(raw):
 def _get_output_to(build_config):
     return build_config.get(Keyword('compiler'), {}).get(Keyword('output-to'))
 
+
 def _get_output_bundles(builds):
     bundles = {}
 
@@ -37,6 +38,8 @@ def get_bundles():
 
     project_settings = edn_format.loads(content)
 
+    # Get cljs output filenames
+
     key = Keyword('cljsbuild')
     if key in project_settings:
         cljsbuild = project_settings[project_settings.index(key) + 1]
@@ -45,6 +48,11 @@ def get_bundles():
 
     output_bundles = _get_output_bundles(cljsbuild.get(Keyword('builds')))
 
-    return output_bundles
+    # Fish out figwheel port
+    host = 'localhost'
+    port = 3449
+    if Keyword('figwheel') in project_settings:
+        port = project_settings[project_settings.index(Keyword('figwheel')) + 1] \
+               .get(Keyword('server-port'), 3449)
 
-    # return [_bundle_name(b) for b in output_bundles]
+    return {k: 'http://{}:{}/{}'.format(host, port, v) for k, v in output_bundles.items()}

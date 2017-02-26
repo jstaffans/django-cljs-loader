@@ -8,8 +8,8 @@ class LoaderTestCase(TestCase):
         with self.settings(CLJS_LOADER={'PROJECT_FILE': 'cljs_loader/tests/project1.clj'}):
             bundles = loader.get_bundles()
             self.assertDictEqual(bundles, {
-                'dev': 'out/frontend.js',
-                'min': 'out/frontend-min.js'
+                'dev': 'http://localhost:3449/out/frontend.js',
+                'min': 'http://localhost:3449/out/frontend-min.js'
             })
 
 
@@ -17,6 +17,6 @@ class LoaderTestCase(TestCase):
         with self.settings(CLJS_LOADER={'PROJECT_FILE': 'cljs_loader/tests/project2.clj'}):
             bundles = loader.get_bundles()
             self.assertDictEqual(bundles, {
-                'dev': 'out/frontend2.js',
-                'min': 'out/frontend2-min.js'
+                'dev': 'http://localhost:3000/out/frontend2.js',
+                'min': 'http://localhost:3000/out/frontend2-min.js'
             })
