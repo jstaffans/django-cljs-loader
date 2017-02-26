@@ -1,5 +1,6 @@
 (defproject test "0.1.0-SNAPSHOT"
-  :description "Empty"
+  :description ^{:some-key true} "Empty"
+  ;; cljsbuild section
   :cljsbuild {:builds
               [{:id "dev"
                 :compiler {:output-to "out/frontend.js"}}
