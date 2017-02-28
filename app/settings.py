@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
-    # 'webpack_loader',
+    'cljs_loader',
 )
 
 MIDDLEWARE_CLASSES = (
