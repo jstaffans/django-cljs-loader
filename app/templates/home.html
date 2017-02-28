@@ -1,12 +1,14 @@
+{% load render_bundle from cljs_loader %}
+
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
     <title>Example</title>
+    {% render_bundle 'dev' %}
   </head>
   <body>
     <div>Hello world!</div>
-    <pre>{{ bundles }}</pre>
     <div id="cljs-app"></div>
   </body>
 </html>
