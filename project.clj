@@ -16,11 +16,14 @@
 
   :source-paths ["assets/cljs"]
 
-  :clean-targets ^{:protect false} ["assets/js/compiled" "assets/target"]
+  :resource-paths ["assets"]
+
+  :clean-targets ^{:protect false} ["assets/public/js/compiled"]
 
   :cljsbuild {:builds
               [{:id "dev"
-                :source-paths ["assets/cljs"]  ; foo
+
+                :source-paths ["assets/cljs"]
 
                 ;; the presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
@@ -28,65 +31,33 @@
                 :figwheel {:on-jsload "frontend.core/on-js-reload"}
 
                 :compiler {:main frontend.core
-                           :asset-path "js/compiled/out"
-                           :output-to "assets/js/compiled/frontend.js"
-                           :output-dir "assets/js/compiled/out"
+                           ;; Need to point to Figwheel dev server (localhost:3449),
+                           ;; because assets are routed via Django in dev mode
+                           :asset-path "http://localhost:3449/js/compiled/out"
+                           :output-to "assets/public/js/compiled/frontend.js"
+                           :output-dir "assets/public/js/compiled/out"
                            :source-map-timestamp true
+
                            ;; To console.log CLJS data-structures make sure you enable devtools in Chrome
                            ;; https://github.com/binaryage/cljs-devtools
                            :preloads [devtools.preload]}}
+
                ;; This next build is an compressed minified build for
                ;; production. You can build this with:
                ;; lein cljsbuild once min
                {:id "min"
-                :source-paths ["src"]
-                :compiler {:output-to "assets/js/compiled/frontend.js"
+                :source-paths ["assets/cljs"]
+                :compiler {:output-to "assets/public/js/compiled/frontend.js"
                            :main frontend.core
                            :optimizations :advanced
                            :pretty-print false}}]}
 
-  :figwheel {;; :http-server-root "public" ;; default and assumes "resources"
-             ;; :server-port 3449 ;; default
+  :figwheel {;; :server-port 3449 ;; default
              ;; :server-ip "127.0.0.1"
 
-             :css-dirs ["assets/css"] ;; watch and update CSS
-
-             ;; Start an nREPL server into the running figwheel process
-             ;; :nrepl-port 7888
-
-             ;; To be able to open files in your editor from the heads up display
-             ;; you will need to put a script on your path.
-             ;; that script will have to take a file path and a line number
-             ;; ie. in  ~/bin/myfile-opener
-             ;; #! /bin/sh
-             ;; emacsclient -n +$2 $1
-             ;;
-             ;; :open-file-command "myfile-opener"
-
-             ;; if you are using emacsclient you can just use
-             ;; :open-file-command "emacsclient"
-
-             ;; if you want to disable the REPL
-             ;; :repl false
-
-             ;; to configure a different figwheel logfile path
-             ;; :server-logfile "tmp/logs/figwheel-logfile.log"
-             }
-
-
-  ;; setting up nREPL for Figwheel and ClojureScript dev
-  ;; Please see:
-  ;; https://github.com/bhauman/lein-figwheel/wiki/Using-the-Figwheel-REPL-within-NRepl
-
+             ;; Watch and update CSS
+             :css-dirs ["assets/public/css"]}
 
   :profiles {:dev {:dependencies [[binaryage/devtools "0.9.0"]
                                   [figwheel-sidecar "0.5.9"]
-                                  [com.cemerick/piggieback "0.2.1"]]
-                   ;; need to add dev source path here to get user.clj loaded
-                   ;; TODO: django-cljs might not need it
-                   :source-paths ["assets/cljs"]
-                   ;; for CIDER
-                   ;; :plugins [[cider/cider-nrepl "0.12.0"]]
-                   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
-
-)
+                                  [com.cemerick/piggieback "0.2.1"]]}})

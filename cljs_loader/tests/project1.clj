@@ -3,6 +3,6 @@
   ;; cljsbuild section
   :cljsbuild {:builds
               [{:id "dev"
-                :compiler {:output-to "out/frontend.js"}}
+                :compiler {:output-to "assets/public/out/frontend.js"}}
                {:id "min"
-                :compiler {:output-to "out/frontend-min.js"}}]})
+                :compiler {:output-to "assets/public/out/frontend-min.js"}}]})

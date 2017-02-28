@@ -4,6 +4,8 @@ import edn_format
 from edn_format.edn_lex import Keyword
 import re
 
+# TODO: default settings (merge with Django settings)
+
 class Loader():
 
     _bundles = {}
@@ -23,12 +25,14 @@ class Loader():
     def _get_output_bundles(self, builds):
         bundles = {}
 
+        figwheel_root = settings.CLJS_LOADER['FIGWHEEL_ROOT']
+
         if type(builds) is edn_format.immutable_dict.ImmutableDict:
             for id, build_config in builds.items():
-                bundles[id.name] = self._get_output_to(build_config)
+                bundles[id.name] = self._get_output_to(build_config).replace(figwheel_root, '')
         else:
             for build_config in builds:
-                bundles[build_config.get(Keyword('id'))] = self._get_output_to(build_config)
+                bundles[build_config.get(Keyword('id'))] = self._get_output_to(build_config).replace(figwheel_root, '')
 
         return bundles
 

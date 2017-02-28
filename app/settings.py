@@ -108,5 +108,6 @@ STATICFILES_DIRS = (
 )
 
 CLJS_LOADER = {
-    'PROJECT_FILE': os.path.join(BASE_DIR, 'project.clj')
+    'PROJECT_FILE': os.path.join(BASE_DIR, 'project.clj'),
+    'FIGWHEEL_ROOT': 'assets/public/',
 }
