@@ -5,10 +5,42 @@
   <head>
     <meta charset="UTF-8">
     <title>Example</title>
-    {% render_bundle 'dev' %}
+    <style>
+      div, h1, input {
+          font-family: HelveticaNeue, Helvetica;
+          color: #777;
+      }
+
+      .example-clock {
+          font-size: 128px;
+          line-height: 1.2em;
+          font-family: HelveticaNeue-UltraLight, Helvetica;
+      }
+
+      @media (max-width: 768px) {
+          .example-clock {
+              font-size: 64px;
+          }
+      }
+
+      .color-input, .color-input input {
+          font-size: 24px;
+          line-height: 1.5em;
+      }
+    </style>
   </head>
   <body>
-    <div>Hello world!</div>
-    <div id="cljs-app"></div>
+    <h1>Hello from Django!</h1>
+
+    <div id="app"></div>
+
+    {% render_bundle 'dev' %}
+
+    <!-- TODO: this should be added as a second tag by render_bundle -->
+    <script>
+      window.onload = function () {
+        frontend.core.run();
+      }
+    </script>
   </body>
 </html>

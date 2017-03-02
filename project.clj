@@ -9,7 +9,9 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
                  [org.clojure/core.async "0.2.395"
-                  :exclusions [org.clojure/tools.reader]]]
+                  :exclusions [org.clojure/tools.reader]]
+                 [reagent "0.6.0"]
+                 [re-frame "0.9.0"]]
 
   :plugins [[lein-figwheel "0.5.9"]
             [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]]
@@ -28,7 +30,7 @@
                 ;; the presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
                 ;; into your build
-                :figwheel {:on-jsload "frontend.core/on-js-reload"}
+                :figwheel {:on-jsload "frontend.core/run"}
 
                 :compiler {:main frontend.core
                            ;; Need to point to Figwheel dev server (localhost:3449),
