@@ -3,7 +3,6 @@ from cljs_loader import loader
 
 class LoaderTestCase(TestCase):
 
-
     def test_config_as_vector(self):
         with self.settings(CLJS_LOADER={
                 'PROJECT_FILE': 'cljs_loader/tests/project1.clj',
@@ -11,8 +10,15 @@ class LoaderTestCase(TestCase):
         }):
             bundles = loader.Loader().get_bundles()
             self.assertDictEqual(bundles, {
-                'dev': 'http://localhost:3449/out/frontend.js',
-                'min': 'http://localhost:3449/out/frontend-min.js'
+                'dev': {
+                    'url': 'http://localhost:3449/out/frontend.js',
+                    'on-jsload': 'frontend.core.run()'
+                },
+                'min': {
+                    'url': 'http://localhost:3449/out/frontend-min.js',
+                    'on-jsload': 'frontend.core.main()'
+                },
+
             })
 
 
@@ -23,6 +29,12 @@ class LoaderTestCase(TestCase):
         }):
             bundles = loader.Loader().get_bundles()
             self.assertDictEqual(bundles, {
-                'dev': 'http://localhost:3000/out/frontend2.js',
-                'min': 'http://localhost:3000/out/frontend2-min.js'
+                'dev': {
+                    'url': 'http://localhost:3000/out/frontend2.js',
+                    'on-jsload': 'frontend.core.run()'
+                },
+                'min': {
+                    'url': 'http://localhost:3000/out/frontend2-min.js',
+                    'on-jsload': 'frontend.core.main()'
+                }
             })

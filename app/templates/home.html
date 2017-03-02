@@ -7,7 +7,7 @@
     <title>Example</title>
     <style>
       div, h1, input {
-          font-family: HelveticaNeue, Helvetica;
+        font-family: HelveticaNeue, Helvetica;
           color: #777;
       }
 
@@ -31,16 +31,7 @@
   </head>
   <body>
     <h1>Hello from Django!</h1>
-
     <div id="app"></div>
-
     {% render_bundle 'dev' %}
-
-    <!-- TODO: this should be added as a second tag by render_bundle -->
-    <script>
-      window.onload = function () {
-        frontend.core.run();
-      }
-    </script>
   </body>
 </html>

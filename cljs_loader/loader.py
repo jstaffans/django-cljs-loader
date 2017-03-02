@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 import edn_format
 from edn_format.edn_lex import Keyword
+from functools import partial
 import re
 
 # TODO: default settings (merge with Django settings)
@@ -19,23 +20,48 @@ class Loader():
 
 
     def _get_output_to(self, build_config):
-        return build_config.get(Keyword('compiler'), {}).get(Keyword('output-to'))
+        figwheel_root = settings.CLJS_LOADER['FIGWHEEL_ROOT']
+        return build_config.get(Keyword('compiler'), {}).get(Keyword('output-to')).replace(figwheel_root, '')
+
+
+    def _get_on_jsload(self, build_config):
+        figwheel_on_jsload = build_config.get(Keyword('figwheel'), {}).get(Keyword('on-jsload'), None)
+
+        if figwheel_on_jsload:
+            return figwheel_on_jsload
+
+        # fish out the "main" namespace, assume there's an (exported) function called "main"
+        cljsbuild_main = build_config.get(Keyword('compiler'), {}).get(Keyword('main'), None)
+
+        if cljsbuild_main:
+            return '{}/main'.format(cljsbuild_main)
+
+        raise ImproperlyConfigured('Couldn\'t determine JavaScript function to call on page load!')
 
 
     def _get_output_bundles(self, builds):
         bundles = {}
 
-        figwheel_root = settings.CLJS_LOADER['FIGWHEEL_ROOT']
-
         if type(builds) is edn_format.immutable_dict.ImmutableDict:
             for id, build_config in builds.items():
-                bundles[id.name] = self._get_output_to(build_config).replace(figwheel_root, '')
+                bundles[id.name] = {
+                    'url': self._get_output_to(build_config),
+                    'on-jsload': self._get_on_jsload(build_config)
+                }
         else:
             for build_config in builds:
-                bundles[build_config.get(Keyword('id'))] = self._get_output_to(build_config).replace(figwheel_root, '')
+                bundles[build_config.get(Keyword('id'))] = {
+                    'url': self._get_output_to(build_config),
+                    'on-jsload': self._get_on_jsload(build_config)
+                }
 
         return bundles
 
+    def _format_for_output(self, host, port, bundle):
+        return {
+            'url': 'http://{}:{}/{}'.format(host, port, bundle['url']),
+            'on-jsload': '{}()'.format(bundle['on-jsload'].replace('/', '.'))
+        }
 
     def get_bundles(self):
         if self._bundles != {}:
@@ -63,11 +89,14 @@ class Loader():
 
         host = 'localhost'
         port = 3449
+
         if Keyword('figwheel') in project_settings:
             port = project_settings[project_settings.index(Keyword('figwheel')) + 1] \
                 .get(Keyword('server-port'), 3449)
 
-        self._bundles = {k: 'http://{}:{}/{}'.format(host, port, v) for k, v in output_bundles.items()}
+        format_for_output = partial(self._format_for_output, host, port)
+
+        self._bundles = {k: format_for_output(v) for k, v in output_bundles.items()}
 
         return self._bundles
 
