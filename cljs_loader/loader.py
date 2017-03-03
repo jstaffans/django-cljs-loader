@@ -5,42 +5,48 @@ from edn_format.edn_lex import Keyword
 from functools import partial
 import re
 
-# TODO: default settings (merge with Django settings)
 
-class Loader():
+class CljsBuildSettings():
 
-    _bundles = {}
+    """
+    A wrapper for the cljsbuild section of a Leiningen project file.
+    Responsible for parsing the bits of information needed for Django integration.
+    """
 
-    def _remove_line_comments(self, lines):
-        return [l for l in lines if not re.match(r'^\s*;', l)]
-
-
-    def _strip_meta(self, raw):
-        return re.sub(r'\^{.*?}', '', raw)
-
+    def __init__(self, cljsbuild_edn):
+        self.figwheel_root = settings.CLJS_LOADER['FIGWHEEL_ROOT']
+        self.cljsbuild_edn = cljsbuild_edn
 
     def _get_output_to(self, build_config):
-        figwheel_root = settings.CLJS_LOADER['FIGWHEEL_ROOT']
-        return build_config.get(Keyword('compiler'), {}).get(Keyword('output-to')).replace(figwheel_root, '')
-
+        return build_config\
+            .get(Keyword('compiler'), {})\
+            .get(Keyword('output-to'), '')\
+            .replace(self.figwheel_root, '')
 
     def _get_on_jsload(self, build_config):
-        figwheel_on_jsload = build_config.get(Keyword('figwheel'), {}).get(Keyword('on-jsload'), None)
+        figwheel_on_jsload = build_config\
+                                 .get(Keyword('figwheel'), {})\
+                                 .get(Keyword('on-jsload'), None)
 
         if figwheel_on_jsload:
             return figwheel_on_jsload
 
         # fish out the "main" namespace, assume there's an (exported) function called "main"
-        cljsbuild_main = build_config.get(Keyword('compiler'), {}).get(Keyword('main'), None)
+        main = build_config.get(Keyword('compiler'), {}).get(Keyword('main'), None)
 
-        if cljsbuild_main:
-            return '{}/main'.format(cljsbuild_main)
+        if main:
+            return '{}/main'.format(main)
 
         raise ImproperlyConfigured('Couldn\'t determine JavaScript function to call on page load!')
 
 
-    def _get_output_bundles(self, builds):
+    def get_output_bundles(self):
         bundles = {}
+
+        builds = self.cljsbuild_edn.get(Keyword('builds'), None)
+
+        if builds is None:
+            raise ImproperlyConfigured('No builds found in cljsbuild section!')
 
         if type(builds) is edn_format.immutable_dict.ImmutableDict:
             for id, build_config in builds.items():
@@ -56,6 +62,25 @@ class Loader():
                 }
 
         return bundles
+
+
+class Loader():
+
+    """
+    Determines loadable bundles from a Leiningen project file.
+
+    TODO: default settings (merge with Django settings)
+    """
+
+    def __init__(self):
+        # setup cache
+        self._bundles = {}
+
+    def _remove_line_comments(self, lines):
+        return [l for l in lines if not re.match(r'^\s*;', l)]
+
+    def _strip_meta(self, raw):
+        return re.sub(r'\^{.*?}', '', raw)
 
     def _format_for_output(self, host, port, bundle):
         return {
@@ -76,13 +101,13 @@ class Loader():
 
         # Get cljs output filenames
 
-        key = Keyword('cljsbuild')
-        if key in project_settings:
-            cljsbuild = project_settings[project_settings.index(key) + 1]
+        if Keyword('cljsbuild') in project_settings:
+            cljsbuild = project_settings[project_settings.index(Keyword('cljsbuild')) + 1]
         else:
             raise ImproperlyConfigured(':cljsbuild key not found in Leiningen project settings!')
 
-        output_bundles = self._get_output_bundles(cljsbuild.get(Keyword('builds')))
+        cljsbuild_settings = CljsBuildSettings(cljsbuild)
+        output_bundles = cljsbuild_settings.get_output_bundles()
 
         # Fish out figwheel port
         # TODO: production will not use "localhost"
