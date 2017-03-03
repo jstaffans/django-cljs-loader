@@ -108,6 +108,10 @@ STATICFILES_DIRS = (
 )
 
 CLJS_LOADER = {
+    # where to find the Leiningen project file
     'PROJECT_FILE': os.path.join(BASE_DIR, 'project.clj'),
+
+    # which folder is used by Figwheel as its document root
+    # (ie which folder does the Fighwheel dev server serve files from)
     'FIGWHEEL_ROOT': 'assets/public/',
 }
