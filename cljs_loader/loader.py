@@ -14,22 +14,22 @@ class CljsBuildSettings():
     """
 
     def __init__(self, cljsbuild_edn):
-        self.figwheel_root = settings.CLJS_LOADER['FIGWHEEL_ROOT']
+        self.root = settings.CLJS_LOADER['ROOT']
         self.cljsbuild_edn = cljsbuild_edn
 
     def _get_output_to(self, build_config):
         return build_config\
             .get(Keyword('compiler'), {})\
             .get(Keyword('output-to'), '')\
-            .replace(self.figwheel_root, '')
+            .replace(self.root, '')
 
     def _get_on_jsload(self, build_config):
-        figwheel_on_jsload = build_config\
-                                 .get(Keyword('figwheel'), {})\
-                                 .get(Keyword('on-jsload'), None)
+        on_jsload = build_config\
+                    .get(Keyword('figwheel'), {})\
+                    .get(Keyword('on-jsload'), None)
 
-        if figwheel_on_jsload:
-            return figwheel_on_jsload
+        if on_jsload:
+            return on_jsload
 
         # fish out the "main" namespace, assume there's an (exported) function called "main"
         main = build_config.get(Keyword('compiler'), {}).get(Keyword('main'), None)
@@ -82,9 +82,18 @@ class Loader():
     def _strip_meta(self, raw):
         return re.sub(r'\^{.*?}', '', raw)
 
-    def _format_for_output(self, host, port, bundle):
+    def _format_for_output_figwheel(self, host, port, bundle):
         return {
             'url': 'http://{}:{}/{}'.format(host, port, bundle['url']),
+            'on-jsload': '{}()'.format(bundle['on-jsload'].replace('/', '.'))
+        }
+
+    def _format_for_output_static(self, bundle):
+        return {
+            'url': '{}{}{}'.format(
+                settings.STATIC_URL,
+                '' if settings.STATIC_URL.endswith('/') else '/',
+                bundle['url']),
             'on-jsload': '{}()'.format(bundle['on-jsload'].replace('/', '.'))
         }
 
@@ -109,17 +118,18 @@ class Loader():
         cljsbuild_settings = CljsBuildSettings(cljsbuild)
         output_bundles = cljsbuild_settings.get_output_bundles()
 
-        # Fish out figwheel port
-        # TODO: production will not use "localhost"
+        if settings.CLJS_LOADER['FIGWHEEL']:
+            host = 'localhost'
+            port = 3449
 
-        host = 'localhost'
-        port = 3449
+            if Keyword('figwheel') in project_settings:
+                port = project_settings[project_settings.index(Keyword('figwheel')) + 1] \
+                    .get(Keyword('server-port'), 3449)
 
-        if Keyword('figwheel') in project_settings:
-            port = project_settings[project_settings.index(Keyword('figwheel')) + 1] \
-                .get(Keyword('server-port'), 3449)
+            format_for_output = partial(self._format_for_output_figwheel, host, port)
+        else:
+            format_for_output = self._format_for_output_static
 
-        format_for_output = partial(self._format_for_output, host, port)
 
         self._bundles = {k: format_for_output(v) for k, v in output_bundles.items()}
 
@@ -127,5 +137,6 @@ class Loader():
 
 
     def get_bundle(self, name):
+
         return self.get_bundles()[name]
 

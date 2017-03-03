@@ -81,7 +81,7 @@
 
 ;; -- Entry Point -------------------------------------------------------------
 
-(defn ^:export run
+(defn ^:export main
   []
   (rf/dispatch-sync [:initialize]) 
   (reagent/render [ui] (js/document.getElementById "app")))

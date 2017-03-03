@@ -30,7 +30,7 @@
                 ;; the presence of a :figwheel configuration here
                 ;; will cause figwheel to inject the figwheel client
                 ;; into your build
-                :figwheel {:on-jsload "frontend.core/run"}
+                :figwheel {:on-jsload "frontend.core/main"}
 
                 :compiler {:main frontend.core
                            ;; Need to point to Figwheel dev server (localhost:3449),

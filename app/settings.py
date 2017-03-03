@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from pathlib import Path
+from edn_format.edn_lex import Keyword
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -104,14 +105,25 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets'),
+    os.path.join(BASE_DIR, 'assets/public'),
 )
 
 CLJS_LOADER = {
     # where to find the Leiningen project file
     'PROJECT_FILE': os.path.join(BASE_DIR, 'project.clj'),
 
-    # which folder is used by Figwheel as its document root
-    # (ie which folder does the Fighwheel dev server serve files from)
-    'FIGWHEEL_ROOT': 'assets/public/',
+    # Set to False for production build
+    'FIGWHEEL': False,
+
+    # which cljs build to use
+    'CLJS_BUILD': Keyword('dev'),
+
+    # Which folder to use as the document root for assets built by Leiningen.
+    #
+    # In development mode, this should match the Figwheel root.
+    #
+    # In production mode, match the folder where cljsbuild outputs
+    # its compiled JavaScript files, e.g. a 'dist' folder, which
+    # is covered by one of the STATICFILES_DIRS above.
+    'ROOT': 'assets/public/',
 }
