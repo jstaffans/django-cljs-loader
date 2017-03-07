@@ -5,8 +5,8 @@ from setuptools import setup
 
 
 def rel(*parts):
-    '''returns the relative path to a file wrt to the current directory'''
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), *parts))
+  '''returns the relative path to a file wrt to the current directory'''
+  return os.path.abspath(os.path.join(os.path.dirname(__file__), *parts))
 
 if os.path.isfile('README.rst'):
   README = open('README.rst', 'r').read()
@@ -14,7 +14,7 @@ else:
   README = open('README.md', 'r').read()
 
 with open(rel('cljs_loader', '__init__.py')) as handler:
-    INIT_PY = handler.read()
+  INIT_PY = handler.read()
 
 
 VERSION = re.findall("__version__ = '([^']+)'", INIT_PY)[0]
@@ -29,7 +29,7 @@ setup(
   download_url = 'https://github.com/jstaffans/django-cljs-loader/tarball/{0}'.format(VERSION),
   url = 'https://github.com/jstaffans/django-cljs-loader',
   keywords = ['django', 'clojurescript'],
-  install_requires = ['edn-format==0.5.12']
+  install_requires = ['edn-format==0.5.12'],
   classifiers = [
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
