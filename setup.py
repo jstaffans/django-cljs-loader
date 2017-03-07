@@ -20,14 +20,14 @@ with open(rel('cljs_loader', '__init__.py')) as handler:
 VERSION = re.findall("__version__ = '([^']+)'", INIT_PY)[0]
 
 setup(
-  name = 'django-cljs',
+  name = 'django-cljs-loader',
   packages = ['cljs_loader', 'cljs_loader/templatetags'],
   version = VERSION,
   description = 'ClojureScript integration for Django',
   author = 'Johannes Staffans',
   author_email = 'johannes.staffans@gmail.com',
-  download_url = 'https://github.com/jstaffans/django-cljs/tarball/{0}'.format(VERSION),
-  url = 'https://github.com/jstaffans/django-cljs',
+  download_url = 'https://github.com/jstaffans/django-cljs-loader/tarball/{0}'.format(VERSION),
+  url = 'https://github.com/jstaffans/django-cljs-loader',
   keywords = ['django', 'clojurescript'],
   classifiers = [
     'Programming Language :: Python :: 3.3',
