@@ -75,7 +75,7 @@
 (defn ui
   []
   [:div
-   [:h3 "Hello!! from ClojureScript, it is now"]
+   [:h3 "Hello!! from ClojureScript/re-frame! It is now"]
    [clock]
    [color-input]])
 
