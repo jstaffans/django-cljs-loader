@@ -1,2 +1,4 @@
 Django
-edn_format
+edn-format==0.5.12
+pytest==3.0.6
+twine==1.8.1
