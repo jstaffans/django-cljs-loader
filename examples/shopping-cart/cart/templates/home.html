@@ -1,0 +1,24 @@
+{% load render_bundle from cljs_loader %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Example</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/basscss/8.0.3/css/basscss.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Oswald" rel="stylesheet">
+  </head>
+  <body class="p3">
+    <h1>Welcome to the fruit shop!</h1>
+
+    <div id="app"></div>
+
+    <script>
+      var initialProps = '{{ initial_props|safe }}';
+    </script>
+
+    {% render_bundle 'dev' %}
+  </body>
+
+</html>
