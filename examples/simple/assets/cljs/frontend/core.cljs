@@ -2,7 +2,7 @@
   (:require [reagent.core :as reagent]
             [re-frame.core :as rf]))
 
-;; A detailed walk-through of this source code is provied in the docs:
+;; This example is from the re-frame documentation. For more info, see:
 ;; https://github.com/Day8/re-frame/blob/master/docs/CodeWalkthrough.md
 
 ;; -- Domino 1 - Event Dispatch -----------------------------------------------
