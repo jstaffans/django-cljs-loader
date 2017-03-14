@@ -38,8 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
     'cljs_loader',
+    'app',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -112,8 +112,9 @@ CLJS_LOADER = {
     # where to find the Leiningen project file
     'PROJECT_FILE': os.path.join(BASE_DIR, 'project.clj'),
 
-    # Set to False for production build
-    'FIGWHEEL': False,
+    # If True, tries to load JS files from the Figwheel dev server.
+    # Set to False in production mode.
+    'FIGWHEEL': True,
 
     # which cljs build to use
     'CLJS_BUILD': Keyword('dev'),

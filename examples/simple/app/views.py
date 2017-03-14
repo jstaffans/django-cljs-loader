@@ -1,6 +1,5 @@
 from django.views.generic.base import TemplateView
 
-from cljs_loader import loader
 
 class TestPageView(TemplateView):
 
