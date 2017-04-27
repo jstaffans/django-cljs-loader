@@ -9,7 +9,10 @@
   :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
                  [org.clojure/clojurescript "1.9.229"]
                  [reagent "0.6.0"]
-                 [re-frame "0.9.0"]]
+                 [reagent-utils "0.2.1"]
+                 [day8.re-frame/http-fx "0.1.3"]
+                 [re-frame "0.9.0"]
+                 [com.cognitect/transit-cljs "0.8.239"]]
 
   :plugins [[lein-figwheel "0.5.9"]
             [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]]
@@ -17,8 +20,6 @@
   :source-paths ["assets/cljs"]
 
   :resource-paths ["assets"]
-
-  :clean-targets ^{:protect false} ["assets/public/js/compiled"]
 
   :cljsbuild {:builds
               [{:id "dev"
@@ -61,9 +62,11 @@
              :css-dirs ["assets/public/css"]}
 
 
-  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.2"]
-                                  [figwheel-sidecar "0.5.9"]
-                                  [com.cemerick/piggieback "0.2.1"]]
-                   :plugins      [[cider/cider-nrepl "0.15.0-SNAPSHOT"]]
-                   :source-paths ["assets/cljs" "assets/dev"]
+  :profiles {:dev {:dependencies  [[binaryage/devtools "0.9.2"]
+                                   [figwheel-sidecar "0.5.9"]
+                                   [com.cemerick/piggieback "0.2.1"]]
+                   :plugins       [[cider/cider-nrepl "0.15.0-SNAPSHOT"]]
+                   :source-paths  ["assets/cljs" "assets/dev"]
+                   :clean-targets ^{:protect false} ["assets/public/js/compiled" :target-path]
+
                    :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}})

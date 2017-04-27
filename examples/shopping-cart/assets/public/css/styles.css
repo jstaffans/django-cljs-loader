@@ -5,3 +5,29 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Oswald', sans-serif;
 }
+
+.cart {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.333rem;
+}
+
+ul.cart {
+  list-style-type: none;
+  padding: 0;
+}
+
+.cart li {
+  margin: 10px 0;
+  width: 250px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cart li .action {
+  display: inline-block;
+  margin: 0 5px;
+  width: 20px;
+  text-align: center;
+  background: white;
+  cursor: pointer;
+}
