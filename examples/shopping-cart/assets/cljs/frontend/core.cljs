@@ -36,29 +36,79 @@
    (update-in db [:cart "items"] (partial map (update-quantity-fn (name-matches-pred item-name) f)))))
 
 
-(defn cart-as-form-data
+(defn flatten-cart
+  "Convert the cart into data suitable for a form POST.
+  Django wants the form data organised in a particular way:
+
+  {'items-0-cart': <cart id>,
+   'items-0-id': <item id>,
+   'items-0-name': <item name>,
+   'items-0-quantity': <quantity>,
+   ...}"
   [cart]
-  )
+  (reduce-kv
+   (fn [acc k item]
+     (let [item-prefix (str "items-" k)]
+       (assoc acc
+              (str item-prefix "-cart") (get cart "id")
+              (str item-prefix "-id") (get item "id")
+              (str item-prefix "-name") (get item "name")
+              (str item-prefix "-quantity") (get item "quantity"))))
+   {}
+   (into [] (get cart "items"))))
+
+(defn with-management-form-data
+  [flat-cart]
+  (assoc
+   flat-cart
+   "items-TOTAL_FORMS" 3
+   "items-INITIAL_FORMS" 3
+   "items-MIN_NUM_FORMS" 1
+   "items-MAX_NUM_FORMS" 1))
+
+(defn as-form-data
+  [flat-cart]
+  (let [form-data (js/FormData.)
+        _         (doseq [[k v] flat-cart]
+                    (.set form-data k v))]
+    form-data))
 
 (rf/reg-event-fx
  :submit-cart
  (fn [cofx _]
-   (let [data (doto (js/FormData.)
-                (.set "foo" "bar"))]
+   (let [form-data (-> cofx
+                       :db
+                       :cart
+                       flatten-cart
+                       with-management-form-data)]
      {:http-xhrio {:method          :post
                    :headers         {"X-CSRFToken" (cookies/get "csrftoken")}
                    :uri             "/"
-                   :data            data
-                   :format          (ajax.core/text-request-format)
+                   :params          form-data
+                   :format          (ajax.core/url-request-format)
                    :response-format (ajax.core/json-response-format {:keywords? true})
-                   :on-success      [::good-post-result]
-                   :on-failure      [::bad-post-result]}})))
+                   :on-success      [::post-ok]
+                   :on-failure      [::post-error]}})))
 
+
+;; TODO: success message
+(rf/reg-event-db
+ ::post-ok
+ (fn [db _]
+   (.log js/console "ok")
+   db))
+
+(rf/reg-event-db
+ ::post-error
+ (fn [db message]
+   (.log js/console "error")
+   (.log js/console message)
+   db))
 
 (rf/reg-sub
-  :cart
-  (fn [db _]
-    (:cart db)))
+ :cart
+ (fn [db _]
+   (:cart db)))
 
 
 (rf/reg-sub

@@ -1,4 +1,5 @@
 from django.forms.models import model_to_dict
+from django.http import JsonResponse
 from django.views.generic.base import TemplateView
 import json
 
@@ -13,13 +14,12 @@ class ShoppingCartView(TemplateView):
 
     def post(self, request):
         context = self.get_context_data()
+        form = CartFormSet(request.POST, instance=self.cart())
 
-        if context['form'].is_valid():
-            print('done')
-            #save your model
-            #redirect
+        if form.is_valid():
+            form.save()
 
-        return super(TemplateView, self).render_to_response(context)
+        return JsonResponse({})
 
     def cart(self):
         return Cart.objects.all()[:1].get()

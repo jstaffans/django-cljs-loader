@@ -14,16 +14,11 @@
 
     <div id="app"></div>
 
+    {% csrf_token %}
+
     <script>
       var initialProps = '{{ cart_json|safe }}';
     </script>
-
-    <!-- <form method="POST">
-         {% csrf_token %}
-         {{ form.as_p }}
-         <input  type="submit" value="Submit"/>
-         </form>
-       -->
 
     {% render_bundle 'dev' %}
   </body>
