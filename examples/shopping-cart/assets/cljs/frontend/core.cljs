@@ -5,6 +5,11 @@
             [day8.re-frame.http-fx]
             [cognitect.transit :as t]))
 
+;; This is a hypothetical frontend for a shopping cart. The initial cart
+;; data is read from a JSON string put into a script tag by the server.
+;; After updates have been performed, the new cart can be POSTed back
+;; via a normal form POST.
+
 
 ;; -----------------------------------------------------------------------------
 ;; Events, subscriptions
@@ -58,15 +63,20 @@
    (into [] (get cart "items"))))
 
 (defn with-management-form-data
+  "Add metadata that Django needs to parse the form data correctly.
+  TODO: would be a lot better to do a JSON POST and not mimic the way
+  server-side rendered Django forms work."
   [flat-cart]
-  (assoc
-   flat-cart
-   "items-TOTAL_FORMS" 3
-   "items-INITIAL_FORMS" 3
-   "items-MIN_NUM_FORMS" 1
-   "items-MAX_NUM_FORMS" 1))
+  (let [num-items (/ (count flat-cart) 4)]  ;; each item produces four form parameters
+    (assoc
+     flat-cart
+     "items-TOTAL_FORMS" num-items
+     "items-INITIAL_FORMS" num-items
+     "items-MIN_NUM_FORMS" num-items
+     "items-MAX_NUM_FORMS" num-items)))
 
 (defn as-form-data
+  "Create a FormData object with the flattened cart, ready to be POSTed to Django."
   [flat-cart]
   (let [form-data (js/FormData.)
         _         (doseq [[k v] flat-cart]
@@ -91,19 +101,17 @@
                    :on-failure      [::post-error]}})))
 
 
-;; TODO: success message
 (rf/reg-event-db
  ::post-ok
  (fn [db _]
-   (.log js/console "ok")
-   db))
+   (assoc db :message {:text "Successfully updated cart!" :type :success})))
 
 (rf/reg-event-db
  ::post-error
  (fn [db message]
    (.log js/console "error")
    (.log js/console message)
-   db))
+   (assoc db :message {:text "An error occurred." :type :error})))
 
 (rf/reg-sub
  :cart
@@ -118,17 +126,34 @@
    (get cart "items")))
 
 
+(rf/reg-sub
+ :message
+ (fn [db _]
+   (:message db)))
+
+
 ;; -----------------------------------------------------------------------------
 ;; UI
 ;; -----------------------------------------------------------------------------
+
+
+(defn inc-item
+  [qty]
+  (min (inc qty) 10))
+
+
+(defn dec-item
+  [qty]
+  (max (dec qty) 0))
+
 
 (defn item
   [{name "name", quantity "quantity"} line-item]
   [:li {:key name}
    [:span (str name, ", " quantity)]
    [:span
-    [:span.action {:on-click #(rf/dispatch [:update-item-quantity name inc])} "+"]
-    [:span.action {:on-click #(rf/dispatch [:update-item-quantity name dec])} "-"]]])
+    [:a {:href "#" :on-click #(rf/dispatch [:update-item-quantity name inc-item])} "+"]
+    [:a {:href "#" :on-click #(rf/dispatch [:update-item-quantity name dec-item])} "-"]]])
 
 
 (defn cart
@@ -137,6 +162,12 @@
    [:ul.cart
     (map item @(rf/subscribe [:items]))]])
 
+
+(defn message
+  []
+  (let [msg @(rf/subscribe [:message])]
+    (when msg
+      [:h4.message (:text msg)])))
 
 (defn on-submit
   [e]
@@ -148,9 +179,10 @@
   []
   [:form {:method "POST" :on-submit on-submit}
    [:div
-    [:h3 "Please update your fruity order here!"]
+    [:h3 "Please update your fruity order here:"]
     [cart]
-    [:input {:type "submit"}]]])
+    [:input {:type "submit"}]
+    [message]]])
 
 
 ;; -----------------------------------------------------------------------------

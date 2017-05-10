@@ -23,11 +23,20 @@ ul.cart {
   justify-content: space-between;
 }
 
-.cart li .action {
+.cart li a {
   display: inline-block;
+  text-decoration: none;
   margin: 0 5px;
   width: 20px;
   text-align: center;
+  color: black;
   background: white;
   cursor: pointer;
+}
+
+.cart li .action:active {
+  color: black;
+  transform: scale(0.8);
+  transition: 0.1s linear;
+  
 }
