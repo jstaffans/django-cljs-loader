@@ -130,7 +130,6 @@ class Loader():
         else:
             format_for_output = self._format_for_output_static
 
-
         self._bundles = {k: format_for_output(v) for k, v in output_bundles.items()}
 
         return self._bundles
