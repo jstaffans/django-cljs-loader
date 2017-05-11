@@ -1,2 +1,2 @@
 Django
-git+https://github.com/jstaffans/django-cljs-loader.git@7cca424e94377ad046847a257a787c2f3cab1665#egg=django-cljs-loader
+git+https://github.com/jstaffans/django-cljs-loader.git@eef2a48b87590367e3bc465e700890e64a92ee32#egg=django-cljs-loader
