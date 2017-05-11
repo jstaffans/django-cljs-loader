@@ -1,4 +1,5 @@
 venv
 assets/public/js/compiled
 .lein-repl-history
+db.*
 
