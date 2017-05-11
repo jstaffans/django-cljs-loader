@@ -49,7 +49,7 @@
                ;; lein cljsbuild once min
                {:id "min"
                 :source-paths ["assets/cljs"]
-                :compiler {:output-to "assets/public/js/compiled/frontend.js"
+                :compiler {:output-to "assets/public/js/compiled/frontend.min.js"
                            :main frontend.core
                            :optimizations :advanced
                            :pretty-print false}}]}
