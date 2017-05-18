@@ -90,9 +90,8 @@ class Loader():
 
     def _format_for_output_static(self, bundle):
         return {
-            'url': '{}{}{}'.format(
+            'url': '{}{}'.format(
                 settings.STATIC_URL,
-                '' if settings.STATIC_URL.endswith('/') else '/',
                 bundle['url']),
             'on-jsload': '{}()'.format(bundle['on-jsload'].replace('/', '.'))
         }
