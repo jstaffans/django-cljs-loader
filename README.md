@@ -41,9 +41,7 @@ from edn_format.edn_lex import Keyword
 
 BASE_DIR = ...  # should point to the project root
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets/public'),
-)
+STATIC_URL = '/static/'
 
 CLJS_LOADER = {
     # where to find the Leiningen project file
@@ -54,18 +52,19 @@ CLJS_LOADER = {
     'FIGWHEEL': True,
 
     # Which cljs build (defined in the project.clj file) to use.
-    # you will want to change this for production.
+    # Change this for production.
     'CLJS_BUILD': Keyword('dev'),
 
-    # Which folder to use as the document root for assets built by Leiningen.
-    #
-    # In development mode, this should match the Figwheel root.
-    #
-    # In production mode, match the folder where cljsbuild outputs
-    # its compiled JavaScript files, e.g. a 'dist' folder, which
-    # is covered by one of the STATICFILES_DIRS above.
-    'ROOT': 'assets/public/',
+    # The root folder for assets built by Leiningen.
+    # In development mode, this matches the Figwheel root.
+    'ROOT': 'assets/public',
 }
+
+# Add the folder where cljsbuild output lands as a source directory for the 
+# staticfiles app. This assumes you are using the staticfiles app.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, CLJS_LOADER['ROOT']),
+)
 
 ```
 

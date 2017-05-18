@@ -114,11 +114,6 @@ STATIC_URL = '/static/'
 # django-cljs
 # ------------------------------------------------------------------------------
 
-# Make the staticfiles app aware of assets compiled by Leiningen
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets/public'),
-)
-
 CLJS_LOADER = {
     # where to find the Leiningen project file
     'PROJECT_FILE': os.path.join(BASE_DIR, 'project.clj'),
@@ -134,3 +129,8 @@ CLJS_LOADER = {
     # Matches the Figwheel root in development mode.
     'ROOT': 'assets/public',
 }
+
+# Make the staticfiles app aware of assets compiled by Leiningen
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, CLJS_LOADER['ROOT']),
+)
