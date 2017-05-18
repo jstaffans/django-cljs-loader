@@ -6,12 +6,12 @@
 
   :min-lein-version "2.7.1"
 
-  :dependencies [[org.clojure/clojure "1.9.0-alpha14"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
                  [reagent "0.6.0"]
                  [reagent-utils "0.2.1"]
-                 [day8.re-frame/http-fx "0.1.3"]
                  [re-frame "0.9.0"]
+                 [day8.re-frame/http-fx "0.1.3"]
                  [com.cognitect/transit-cljs "0.8.239"]]
 
   :plugins [[lein-figwheel "0.5.9"]
