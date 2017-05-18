@@ -1,3 +1,3 @@
 Django
 djangorestframework
-git+https://github.com/jstaffans/django-cljs-loader.git@eef2a48b87590367e3bc465e700890e64a92ee32#egg=django-cljs-loader
+git+https://github.com/jstaffans/django-cljs-loader.git@19451659e4bc485d326c4df813721223fbd6ac4d#egg=django-cljs-loader
