@@ -33,10 +33,13 @@ to see a working setup in action.
 
 Only Leiningen projects are supported. With a `project.clj` file somewhere
 in your project, you can set the `django-cljs` loader up in your app settings.
+
 It should look something like this:
 
 ```python
 from edn_format.edn_lex import Keyword
+
+BASE_DIR = ...  # should point to the project root
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets/public'),
@@ -66,8 +69,14 @@ CLJS_LOADER = {
 
 ```
 
+Where you put the ClojureScript source files is up to you - `assets/cljs` is
+one possibility. See the example projects. 
+
 ### Template tag
 
+Use the `render_bundle` template tag to hook the compiled ClojureScript bundle 
+into your application. It will insert a `script` tag and call the `main` function
+you have defined in the Leiningen project file.
 
 ```
 {% load render_bundle from cljs_loader %}
@@ -81,10 +90,23 @@ CLJS_LOADER = {
 
 ### Development 
 
-
+Open a second terminal and run `lein figwheel`. Alternatively, launch a REPL
+and do `(fig-start)`. The JavaScript bundle will be loaded from the Figwheel
+development server.
 
 ### Production
 
+Assuming you have a cljsbuild profile called `prod`:
+
+```
+$> lein cljsbuild once prod
+```
+
+The compiled bundle that is produced by `lein cljsbuild` can be collected with 
+`python manage.py collectstatic`, or whichever your preferred method of 
+including production assets is.
+
+The `render_bundle` template tag does not need to change.
 
 ## Contributing
 
