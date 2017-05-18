@@ -102,8 +102,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATIC_URL = '/static/'
 
+# django-cljs
+# ------------------------------------------------------------------------------
+
+# Make the staticfiles app aware of assets compiled by Leiningen
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets/public'),
 )
@@ -120,11 +126,6 @@ CLJS_LOADER = {
     'CLJS_BUILD': Keyword('dev'),
 
     # Which folder to use as the document root for assets built by Leiningen.
-    #
-    # In development mode, this should match the Figwheel root.
-    #
-    # In production mode, match the folder where cljsbuild outputs
-    # its compiled JavaScript files, e.g. a 'dist' folder, which
-    # is covered by one of the STATICFILES_DIRS above.
-    'ROOT': 'assets/public/',
+    # Matches the Figwheel root in development mode.
+    'ROOT': 'assets/public',
 }

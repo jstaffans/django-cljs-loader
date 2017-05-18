@@ -27,6 +27,7 @@ running.
 
 ```shell
 $> lein do clean, cljsbuild once min
+$> python manage.py collectstatic
 $> DJANGO_SETTINGS_MODULE=app.settings-prod python manage.py runserver
 ```
 
