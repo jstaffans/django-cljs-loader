@@ -31,11 +31,11 @@ install:  ## Install build dependencies (prerequisite for build)
 generate-rst:  ## Use pandoc to generate .rst file
 	@pandoc --from=markdown --to=rst --output=README.rst README.md
 
-publish: generate-rst build  ## 
+publish: generate-rst build  ##
 	@echo "Publishing to pypi..."
 	@$(ENV)/bin/twine upload -r $(REPOSITORY) dist/*
 
-register: ## 
+register: ##
 	@echo "Registering package on pypi..."
 	@$(ENV)/bin/twine register -r $(REPOSITORY)
 
