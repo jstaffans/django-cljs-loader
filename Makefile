@@ -1,4 +1,4 @@
-.PHONY: clean build deploy install publish help
+.PHONY: clean build deploy install check-env publish help
 
 # Project settings
 PROJECT = cljs-loader
@@ -19,11 +19,16 @@ clean:  ## Clean
 test: install  ## Run tests
 	@cd tests && python manage.py test
 
-build: clean  ## Build for PyPi upload
+build: install clean  ## Build for PyPi upload
 	@echo "Building..."
 	@python setup.py sdist bdist_wheel --universal
 
-install:  ## Install build dependencies (prerequisite for build)
+check-env:
+ifndef VIRTUAL_ENV
+	$(error VIRTUAL_ENV is undefined)
+endif
+
+install: check-env  ## Install build dependencies (prerequisite for build)
 	@echo "Installing build dependencies"
 	@[ ! -d $(ENV)/ ] && virtualenv -p python3 $(ENV)/ || :
 	@$(ENV)/bin/pip install $(requirements)
