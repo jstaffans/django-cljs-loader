@@ -1,9 +1,0 @@
-venv
-.lein-repl-history
-.nrepl-port
-
-assets/public/js/compiled
-db.*
-
-# collected static assets
-static

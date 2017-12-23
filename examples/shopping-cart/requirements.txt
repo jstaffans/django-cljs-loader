@@ -1,3 +1,0 @@
-Django
-djangorestframework
-git+https://github.com/jstaffans/django-cljs-loader.git@19451659e4bc485d326c4df813721223fbd6ac4d#egg=django-cljs-loader

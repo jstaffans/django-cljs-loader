@@ -23,11 +23,12 @@ $> pip install django-cljs
 
 ### Examples
 
-This repository contains two example applications, have a look at those
+This repository contains one example application, have a look at that
 to see a working setup in action.
 
 * [Simple clock application][simple]
-* [Shopping cart application][cart]
+
+Some more advanced examples are on the way!
 
 ### Settings
 
@@ -121,6 +122,5 @@ $> make test
 [Figwheel]: https://github.com/bhauman/lein-figwheel
 [django-webpack-loader]: https://github.com/owais/django-webpack-loader
 [simple]: examples/simple
-[cart]: examples/shopping-cart
 
 
