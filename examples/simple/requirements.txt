@@ -1,2 +1,2 @@
 Django==2.0
-git+https://github.com/jstaffans/django-cljs-loader.git@e149e0dd43e457bd6e97ec7168bf985fe64426a9#egg=django-cljs-loader
+django-cljs-loader
