@@ -121,6 +121,6 @@ $> make test
 [Leiningen]: http://leiningen.org/
 [Figwheel]: https://github.com/bhauman/lein-figwheel
 [django-webpack-loader]: https://github.com/owais/django-webpack-loader
-[simple]: examples/simple
+[simple]: https://github.com/jstaffans/django-cljs-loader/tree/master/examples/simple
 
 
