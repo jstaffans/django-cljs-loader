@@ -1,5 +1,5 @@
-django-cljs
-===========
+django-cljs-loader
+==================
 
 Transparent integration of ClojureScript in a Django project. Currently supports 
 [Leiningen][] and [Figwheel][], which means you can rely on Figwheel's auto-refresh
@@ -16,7 +16,7 @@ file -- expect things to break if you have a really exotic project setup!
 ## Install
 
 ```shell
-$> pip install django-cljs
+$> pip install django-cljs-loader
 ```
 
 ## Usage
