@@ -1,9 +1,6 @@
 .PHONY: clean build deploy install check-env publish help
 
-# Project settings
-PROJECT = django-cljs-loader
-
-REPOSITORY ?= test
+REPOSITORY ?= test-pypi
 
 requirements = -r requirements.txt
 
@@ -36,10 +33,6 @@ generate-rst:  ## Use pandoc to generate .rst file
 publish: generate-rst build  ## Publish to PyPI
 	@echo "Publishing to pypi..."
 	@twine upload -r $(REPOSITORY) dist/*
-
-register: ## Register on PyPI
-	@echo "Registering package on pypi..."
-	@twine register -r $(REPOSITORY) ${PROJECT}
 
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
