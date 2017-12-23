@@ -16,11 +16,11 @@ else:
 with open(rel('cljs_loader', '__init__.py')) as handler:
   INIT_PY = handler.read()
 
-
 VERSION = re.findall("__version__ = '([^']+)'", INIT_PY)[0]
 
 setup(
   name = 'django-cljs-loader',
+  long_description = README,
   packages = ['cljs_loader', 'cljs_loader/templatetags'],
   version = VERSION,
   description = 'ClojureScript integration for Django',
