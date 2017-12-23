@@ -1,9 +1,9 @@
 .PHONY: clean build deploy install check-env publish help
 
 # Project settings
-PROJECT = cljs-loader
+PROJECT = django-cljs-loader
 
-REPOSITORY ?= test-pypi
+REPOSITORY ?= test
 
 requirements = -r requirements.txt
 
@@ -17,11 +17,11 @@ clean:  ## Clean
 test: install  ## Run tests
 	@cd tests && python manage.py test
 
-build: install clean  ## Build for PyPi upload
+build: install clean  ## Build for PyPI upload
 	@echo "Building..."
 	@python setup.py sdist bdist_wheel --universal
 
-check-env:
+check-env:  ## Checks that a virtual environment is active
 ifndef VIRTUAL_ENV
 	$(error VIRTUAL_ENV is undefined)
 endif
@@ -33,13 +33,13 @@ install: check-env  ## Install build dependencies (prerequisite for build)
 generate-rst:  ## Use pandoc to generate .rst file
 	@pandoc --from=markdown --to=rst --output=README.rst README.md
 
-publish: generate-rst build  ##
+publish: generate-rst build  ## Publish to PyPI
 	@echo "Publishing to pypi..."
 	@twine upload -r $(REPOSITORY) dist/*
 
-register: ##
+register: ## Register on PyPI
 	@echo "Registering package on pypi..."
-	@twine register -r $(REPOSITORY)
+	@twine register -r $(REPOSITORY) ${PROJECT}
 
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
